@@ -671,7 +671,7 @@ contract TransferContract is Ownable {
     }
 }
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.8.7;
 
 contract PCLD_SERIES_I is ERC721Enumerable, Ownable, TransferContract {
 
@@ -681,8 +681,8 @@ contract PCLD_SERIES_I is ERC721Enumerable, Ownable, TransferContract {
 
     string baseURI = "https://gateway.fastiii.top/ipfs/QmNMZgxiSizTqnF2BwuREog7iZXLxWtszu1oL1QjUnCBuH/";
     uint256 public maxMintAmount = 50;
-    uint256 public cost = 1 ether;
-    uint256 public maxSupply = 20000; 
+    uint256 private cost = 1 ether;
+    uint256 private maxSupply = 20000; 
     bool public paused = true;
 
     constructor() ERC721("PGNFT CLUB LEGENDARY DRAGON","PCLD") {}
@@ -695,10 +695,10 @@ contract PCLD_SERIES_I is ERC721Enumerable, Ownable, TransferContract {
     // public
     function mint(uint256 _mintAmount) public{
         uint256 supply = totalSupply();
-        require(!paused);
-        require(_mintAmount > 0);
-        require(_mintAmount <= maxMintAmount);
-        require(supply + _mintAmount <= maxSupply);
+        require(!paused, "The Contract is Paused");
+        require(_mintAmount > 0, "Mint Amount should bigger than 0");
+        require(_mintAmount <= maxMintAmount, "Mint Amount should not exceeds max mint limit");
+        require(supply + _mintAmount <= maxSupply, "Exceeds Max Supply");
         require(transferFromToken(msg.sender,address(this),cost*_mintAmount), "invalid price");
         for (uint256 i = 1; i <= _mintAmount; i++) {
             _safeMint(msg.sender, supply + i);
@@ -724,13 +724,20 @@ contract PCLD_SERIES_I is ERC721Enumerable, Ownable, TransferContract {
             ? string(abi.encodePacked(currentBaseURI, tokenId.toString()))
             : "";
     }
+
+    event SetMaxMintAmountEvent(uint256 amount);
     function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner() {
+        require(_newmaxMintAmount <= 50, "The Max Mint Amount is limited to 50, You should have to provide a smaller value");
         maxMintAmount = _newmaxMintAmount;
+        emit SetMaxMintAmountEvent(_newmaxMintAmount);
     }
+    event SetPauseEvent(bool state);
     function pause(bool _state) public onlyOwner {
        paused = _state;
+       emit SetPauseEvent(_state);
     }
-    function withdraw() public payable onlyOwner {
-        transferToken(msg.sender, address(this).balance);
+
+    function withdraw() public onlyOwner {
+        transferToken(msg.sender, balanceOfToken(address(this)));
     }
 }
