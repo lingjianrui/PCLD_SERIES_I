@@ -665,10 +665,6 @@ contract TransferContract is Ownable {
     function balanceOfToken(address _from) internal view returns (uint256) {
         return filToken.balanceOf(_from);
     }
-
-    function setERC20(IERC20 fil) public onlyOwner {
-        filToken = fil;
-    }
 }
 
 pragma solidity >=0.8.7;
