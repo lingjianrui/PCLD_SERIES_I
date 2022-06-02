@@ -678,7 +678,7 @@ contract PCLD_SERIES_I is ERC721Enumerable, Ownable, TransferContract {
     using Strings for uint256;
     string baseURI = "https://gateway.fastiii.top/ipfs/QmNMZgxiSizTqnF2BwuREog7iZXLxWtszu1oL1QjUnCBuH/";
     uint256 public maxMintAmount = 50;
-    uint256 private cost = 1 ether;
+    uint256 private cost = 1;
     uint256 private maxSupply = 20000; 
     bool public paused = true;
 
