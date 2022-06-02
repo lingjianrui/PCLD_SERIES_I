@@ -676,9 +676,6 @@ pragma solidity >=0.8.7;
 contract PCLD_SERIES_I is ERC721Enumerable, Ownable, TransferContract {
 
     using Strings for uint256;
-
-    event Remark(address indexed from, address indexed to, string indexed remark, uint256 tokenId);
-
     string baseURI = "https://gateway.fastiii.top/ipfs/QmNMZgxiSizTqnF2BwuREog7iZXLxWtszu1oL1QjUnCBuH/";
     uint256 public maxMintAmount = 50;
     uint256 private cost = 1 ether;
